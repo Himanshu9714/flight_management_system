@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Flight Schedules{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Flight Schedules</h1>
+    <a href="{% url 'flights:flight_schedule_create' %}" class="btn btn-primary mb-3">Add Schedule</a>
+
+    {% if schedules %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Flight</th>
+                    <th>Schedule Date</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for schedule in schedules %}
+                <tr>
+                    <td>{{ schedule.flight }}</td>
+                    <td>{{ schedule.schedule_date }}</td>
+                    <td>{{ schedule.departure_time }}</td>
+                    <td>{{ schedule.arrival_time }}</td>
+                    <td>
+                        <a href="{% url 'flights:flight_schedule_update' schedule.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'flights:flight_schedule_delete' schedule.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No schedules available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No schedules found.</p>
+    {% endif %}
+</div>
+{% endblock %}

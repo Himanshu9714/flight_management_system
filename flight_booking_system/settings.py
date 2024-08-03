@@ -23,9 +23,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "flights",
     "users",
     "dashboard",
+    "airlines",
+    "airports",
+    "flights",
+    "bookings",
 ]
 
 # Middleware

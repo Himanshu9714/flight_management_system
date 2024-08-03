@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Booking Detail</h1>
+    <dl class="row">
+        <dt class="col-sm-3">Flight</dt>
+        <dd class="col-sm-9">{{ booking.flight }}</dd>
+
+        <dt class="col-sm-3">Seat Number</dt>
+        <dd class="col-sm-9">{{ booking.seat_number }}</dd>
+
+        <dt class="col-sm-3">Price</dt>
+        <dd class="col-sm-9">${{ booking.price }}</dd>
+
+        <dt class="col-sm-3">Status</dt>
+        <dd class="col-sm-9">{{ booking.get_status_display }}</dd>
+
+        <dt class="col-sm-3">Booking Date</dt>
+        <dd class="col-sm-9">{{ booking.booking_date }}</dd>
+    </dl>
+
+    <a href="{% url 'bookings:booking_list' %}" class="btn btn-primary">Back to Bookings</a>
+</div>
+{% endblock %}

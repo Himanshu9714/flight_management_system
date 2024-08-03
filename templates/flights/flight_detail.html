@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Flight Detail{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Flight Detail</h1>
+    <dl class="row">
+        <dt class="col-sm-3">Flight Number</dt>
+        <dd class="col-sm-9">{{ flight.flight_number }}</dd>
+
+        <dt class="col-sm-3">Airline</dt>
+        <dd class="col-sm-9">{{ flight.airline }}</dd>
+
+        <dt class="col-sm-3">Departure Airport</dt>
+        <dd class="col-sm-9">{{ flight.departure_airport }}</dd>
+
+        <dt class="col-sm-3">Arrival Airport</dt>
+        <dd class="col-sm-9">{{ flight.arrival_airport }}</dd>
+
+        <dt class="col-sm-3">Departure Time</dt>
+        <dd class="col-sm-9">{{ flight.departure_time }}</dd>
+
+        <dt class="col-sm-3">Arrival Time</dt>
+        <dd class="col-sm-9">{{ flight.arrival_time }}</dd>
+
+        <dt class="col-sm-3">Duration</dt>
+        <dd class="col-sm-9">{{ flight.duration }}</dd>
+
+        <dt class="col-sm-3">Price</dt>
+        <dd class="col-sm-9">${{ flight.price }}</dd>
+
+        <dt class="col-sm-3">Seats Available</dt>
+        <dd class="col-sm-9">{{ flight.seats_available }}</dd>
+    </dl>
+
+    <a href="{% url 'flights:flight_list' %}" class="btn btn-primary">Back to Flights</a>
+</div>
+{% endblock %}

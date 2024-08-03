@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Airports{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Airports</h2>
+
+    <form method="get" class="form-inline mb-4">
+        <input type="text" name="search" class="form-control mr-2" placeholder="Search airports" value="{{ request.GET.search }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for airport in airports %}
+                <tr>
+                    <td>{{ airport.code }}</td>
+                    <td>{{ airport.name }}</td>
+                    <td>{{ airport.city }}</td>
+                    <td>{{ airport.country }}</td>
+                    <td>
+                        <a href="{% url 'airpots:airport_update' airport.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'airpots:airport_delete' airport.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page=1">&laquo; first</a>
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}

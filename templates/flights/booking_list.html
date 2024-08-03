@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Bookings{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Your Bookings</h1>
+    <a href="{% url 'bookings:booking_create' %}" class="btn btn-primary mb-3">Book a Flight</a>
+
+    {% if bookings %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Flight</th>
+                    <th>Seat Number</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.id }}</td>
+                    <td>{{ booking.flight }}</td>
+                    <td>{{ booking.seat_number }}</td>
+                    <td>${{ booking.price }}</td>
+                    <td>{{ booking.get_status_display }}</td>
+                    <td>
+                        <a href="{% url 'bookings:booking_detail' booking.id %}" class="btn btn-info btn-sm">View</a>
+                        {% if booking.status == 'confirmed' %}
+                            <a href="{% url 'bookings:booking_cancel' booking.id %}" class="btn btn-danger btn-sm">Cancel</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No bookings available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</div>
+{% endblock %}

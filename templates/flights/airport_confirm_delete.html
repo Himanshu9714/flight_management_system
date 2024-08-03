@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Airport{% endblock %}
+
+{% block page_title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete the airport "{{ object.name }}"?</p>
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'airports:airport_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

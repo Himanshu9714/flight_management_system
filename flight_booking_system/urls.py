@@ -25,6 +25,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
     path("dashboard/", include("dashboard.urls")),
+    path("flights/", include("flights.urls")),
+    path("airlines/", include("airlines.urls")),
+    path("airports/", include("airports.urls")),
+    path("bookings/", include("bookings.urls")),
 ]
 
 

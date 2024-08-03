@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Cancel Booking{% endblock %}
+
+{% block page_title %}Confirm Cancellation{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to cancel the booking for flight "{{ object.flight.flight_number }}"?</p>
+    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+    <a href="{% url 'bookings:booking_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

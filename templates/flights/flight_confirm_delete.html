@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Flight{% endblock %}
+
+{% block page_title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure you want to delete the flight "{{ object.flight_number }}"?</p>
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'flights:flight_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
