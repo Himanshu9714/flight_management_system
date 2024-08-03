@@ -3,6 +3,81 @@
 {% block title %}Edit Profile{% endblock %}
 
 {% block content %}
-<h1>Edit Profile</h1>
-<p>Profile editing functionality will go here.</p>
+<div class="container mt-5">
+    <h1 class="mb-4">Edit Profile</h1>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    {{ user_form.email }}
+                    <input type="text" name="email" value="{{request.user.email}}" class="form-control" id="id_email" disabled="disabled" />
+                </div>
+                <div class="form-group">
+                    <label for="id_first_name">First Name</label>
+                    {{ user_form.first_name }}
+                    {% if user_form.first_name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ user_form.first_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Last Name</label>
+                    {{ user_form.last_name }}
+                    {% if user_form.last_name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ user_form.last_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_bio">Bio</label>
+                    {{ profile_form.bio }}
+                    {% if profile_form.bio.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ profile_form.bio.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_location">Location</label>
+                    {{ profile_form.location }}
+                    {% if profile_form.location.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ profile_form.location.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_birth_date">Birth Date</label>
+                    {{ profile_form.birth_date }}
+                    {% if profile_form.birth_date.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ profile_form.birth_date.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="id_profile_picture">Profile Picture</label>
+                    {{ profile_form.profile_picture }}
+                    {% if profile_form.profile_picture.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ profile_form.profile_picture.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {% if request.user.profile.profile_picture %}
+                        <img src="{{ request.user.profile.profile_picture.url }}" class="img-thumbnail" width="150">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+</div>
 {% endblock %}

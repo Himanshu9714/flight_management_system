@@ -44,12 +44,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name = _("user")
         verbose_name_plural = _("users")
 
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
     def __str__(self):
         return self.email
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, related_name="profile"
+    )
     bio = models.TextField(_("bio"), blank=True)
     location = models.CharField(_("location"), max_length=30, blank=True)
     birth_date = models.DateField(_("birth date"), null=True, blank=True)

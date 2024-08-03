@@ -82,14 +82,18 @@
             <a href="#">Bookings</a>
             <div class="bottom-links">
                 <a href="#">Settings</a>
-                <a href="{% url 'users:logout' %}">Logout</a>
+                <form id="logout-form" action="{% url 'users:logout' %}" method="POST" style="display: none;">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+                <a href="#" class="nav-link" onclick="document.getElementById('logout-form').submit();">Logout</a>
             </div>
         </nav>
         <div class="content">
             <div class="profile">
-                <img src="{% static 'images/img.png' %}" alt="img">
+                <img src="{{ request.user.profile.profile_picture.url }}" alt="img">
                 <p>
-                    <a href="{% url 'users:profile_edit' %}">{{ request.user.email }}</a>
+                    <a href="{% url 'users:profile_edit' %}">{{ request.user.full_name }}</a>
                 </p>
             </div>
             {% block content %}
