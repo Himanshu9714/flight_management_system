@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from django.shortcuts import redirect
@@ -9,6 +8,8 @@ from django.views import View
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import ListView
+
+from flight_booking_system.mixins import AdminRequiredMixin
 
 from .forms import CustomUserChangeFormUI
 from .forms import CustomUserChangeFormUIwithEmail
@@ -76,12 +77,6 @@ class ProfileEditView(LoginRequiredMixin, View):
             self.template_name,
             {"user_form": user_form, "profile_form": profile_form},
         )
-
-
-# Admin Views
-class AdminRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.role == "admin"
 
 
 class UserListView(LoginRequiredMixin, AdminRequiredMixin, ListView):

@@ -1,8 +1,11 @@
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.views.generic import DeleteView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
+
+from flight_booking_system.mixins import AdminRequiredMixin
 
 from .forms import AirlineForm
 from .models import Airline
@@ -16,10 +19,12 @@ class AirlineListView(ListView):
 
     def get_queryset(self):
         # Optional: Customize the queryset if needed
-        return Airline.objects.all()
+        query = self.request.GET.get("search", "")
+        queryset = Airline.objects.filter(name__icontains=query)
+        return queryset
 
 
-class AirlineCreateView(CreateView):
+class AirlineCreateView(CreateView, AdminRequiredMixin):
     model = Airline
     form_class = AirlineForm
     template_name = "flights/airline_form.html"
@@ -30,7 +35,7 @@ class AirlineCreateView(CreateView):
         return super().form_valid(form)
 
 
-class AirlineUpdateView(UpdateView):
+class AirlineUpdateView(UpdateView, AdminRequiredMixin):
     model = Airline
     form_class = AirlineForm
     template_name = "flights/airline_form.html"
@@ -41,7 +46,7 @@ class AirlineUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class AirlineDeleteView(DeleteView):
+class AirlineDeleteView(DeleteView, AdminRequiredMixin):
     model = Airline
     template_name = "flights/airline_confirm_delete.html"
     success_url = reverse_lazy("airlines:airline_list")

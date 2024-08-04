@@ -5,6 +5,8 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 
+from flight_booking_system.mixins import AdminRequiredMixin
+
 from .forms import FlightForm
 from .forms import FlightScheduleForm
 from .models import Flight
@@ -21,21 +23,21 @@ class FlightListView(ListView):
         return Flight.objects.all().order_by("departure_time")
 
 
-class FlightCreateView(CreateView):
+class FlightCreateView(CreateView, AdminRequiredMixin):
     model = Flight
     form_class = FlightForm
     template_name = "flights/flight_form.html"
     success_url = reverse_lazy("flights:flight_list")
 
 
-class FlightUpdateView(UpdateView):
+class FlightUpdateView(UpdateView, AdminRequiredMixin):
     model = Flight
     form_class = FlightForm
     template_name = "flights/flight_form.html"
     success_url = reverse_lazy("flights:flight_list")
 
 
-class FlightDeleteView(DeleteView):
+class FlightDeleteView(DeleteView, AdminRequiredMixin):
     model = Flight
     template_name = "flights/flight_confirm_delete.html"
     success_url = reverse_lazy("flights:flight_list")
@@ -57,7 +59,7 @@ class FlightScheduleListView(ListView):
         return FlightSchedule.objects.all().order_by("schedule_date", "departure_time")
 
 
-class FlightScheduleCreateView(CreateView):
+class FlightScheduleCreateView(CreateView, AdminRequiredMixin):
     model = FlightSchedule
     form_class = FlightScheduleForm
     template_name = "flights/flight_schedule_form.html"

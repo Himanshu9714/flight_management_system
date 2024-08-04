@@ -38,8 +38,10 @@
                 <td>{{ flight.seats_available }}</td>
                 <td>
                     <a href="{% url 'flights:flight_detail' flight.id %}" class="btn btn-info btn-sm">View</a>
-                    <a href="{% url 'flights:flight_update' flight.id %}" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="{% url 'flights:flight_delete' flight.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    {% if request.user.role == "admin" %}
+                        <a href="{% url 'flights:flight_update' flight.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'flights:flight_delete' flight.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
@@ -49,7 +51,9 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'flights:flight_create' %}" class="btn btn-success">Add New Flight</a>
+    {% if request.user.role == "admin" %}
+        <a href="{% url 'flights:flight_create' %}" class="btn btn-success">Add New Flight</a>
+    {% endif %}
 
     <div class="pagination">
         <span class="step-links">

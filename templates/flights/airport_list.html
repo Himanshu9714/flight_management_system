@@ -18,7 +18,9 @@
                 <th>Name</th>
                 <th>City</th>
                 <th>Country</th>
-                <th>Actions</th>
+                {% if request.user.role == "admin" %}
+                    <th>Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -28,19 +30,23 @@
                     <td>{{ airport.name }}</td>
                     <td>{{ airport.city }}</td>
                     <td>{{ airport.country }}</td>
+                    {% if request.user.role == "admin" %}
                     <td>
                         <a href="{% url 'airports:airport_update' airport.pk %}" class="btn btn-warning btn-sm">Edit</a>
                         <a href="{% url 'airports:airport_delete' airport.pk %}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
+                    {% endif %}
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5" class="text-center">No airports found.</td>
+                    <td colspan="{% if is_admin_user %}5{% else %}4{% endif %}" class="text-center">No airports found.</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'airports:airport_create' %}" class="btn btn-success">Add New Airport</a>
+    {% if request.user.role == "admin" %}
+        <a href="{% url 'airports:airport_create' %}" class="btn btn-success">Add New Airport</a>
+    {% endif %}
 
     <div class="pagination">
         <span class="step-links">

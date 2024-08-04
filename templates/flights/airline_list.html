@@ -20,7 +20,9 @@
                     <th>#</th>
                     <th>Name</th>
                     <th>Logo</th>
+                    {% if request.user.role == "admin" %}
                     <th>Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -28,20 +30,28 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ airline.name }}</td>
-                        <td><img src="{{ airline.logo.url }}" alt="Logo" class="img-thumbnail" style="width: 50px;"></td>
+                        {% if airline.logo %}
+                            <td><img src="{{ airline.logo.url }}" alt="Logo" class="img-thumbnail" style="width: 50px;"></td>
+                        {% else %}
+                            <td><img src="" alt="Logo" class="img-thumbnail" style="width: 50px;"></td>
+                        {% endif %}
+                        {% if request.user.role == "admin" %}
                         <td>
                             <a href="{% url 'airlines:airline_update' airline.id %}" class="btn btn-primary btn-sm">Edit</a>
                             <a href="{% url 'airlines:airline_delete' airline.id %}" class="btn btn-danger btn-sm">Delete</a>
                         </td>
+                        {% endif %}
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="4" class="text-center">No airlines found.</td>
+                        <td colspan="{% if is_admin_user %}4{% else %}3{% endif %}" class="text-center">No airlines found.</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% if request.user.role == "admin" %}
         <a href="{% url 'airlines:airline_create' %}" class="btn btn-success">Add New Airline</a>
+        {% endif %}
 
         <div class="pagination">
             <span class="step-links">

@@ -5,6 +5,8 @@ from django.views.generic import DeleteView
 from django.views.generic import ListView
 from django.views.generic import UpdateView
 
+from flight_booking_system.mixins import AdminRequiredMixin
+
 from .forms import AirportForm
 from .models import Airport
 
@@ -28,21 +30,21 @@ class AirportListView(ListView):
         return queryset
 
 
-class AirportCreateView(CreateView):
+class AirportCreateView(CreateView, AdminRequiredMixin):
     model = Airport
     form_class = AirportForm
     template_name = "flights/airport_form.html"
     success_url = reverse_lazy("airports:airport_list")
 
 
-class AirportUpdateView(UpdateView):
+class AirportUpdateView(UpdateView, AdminRequiredMixin):
     model = Airport
     form_class = AirportForm
     template_name = "flights/airport_form.html"
     success_url = reverse_lazy("airports:airport_list")
 
 
-class AirportDeleteView(DeleteView):
+class AirportDeleteView(DeleteView, AdminRequiredMixin):
     model = Airport
     template_name = "flights/airport_confirm_delete.html"
     success_url = reverse_lazy("airports:airport_list")
