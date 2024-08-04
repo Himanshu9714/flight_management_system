@@ -62,3 +62,11 @@ body {
     align-items: center;
     flex-direction: column;
 }
+
+.welcome_heading{
+    display: flex;
+    align-items: center;
+    height: 500px;
+    color: rgb(255, 72, 0);
+    justify-content: center;
+}

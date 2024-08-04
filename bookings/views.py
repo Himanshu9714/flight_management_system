@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -8,6 +9,7 @@ from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import View
 
+from .forms import BookingFilterForm
 from .forms import BookingForm
 from .models import Booking
 
@@ -19,11 +21,38 @@ class BookingListView(LoginRequiredMixin, ListView):
     paginate_by = 10  # Number of bookings per page
 
     def get_queryset(self):
-        return Booking.objects.filter(user=self.request.user).order_by("-booking_date")
+        user = self.request.user
+        queryset = Booking.objects.select_related("flight").order_by("-booking_date")
+
+        if user.role != "admin":
+            queryset = queryset.filter(user=user)
+
+        filters = {
+            "flight__departure_time__date__gte": self.request.GET.get("departure_date"),
+            "flight__arrival_time__date__lte": self.request.GET.get("arrival_date"),
+            "flight__flight_number__icontains": self.request.GET.get("flight_number"),
+            "flight__departure_airport__name__icontains": self.request.GET.get(
+                "departure_airport"
+            ),
+            "flight__arrival_airport__name__icontains": self.request.GET.get(
+                "arrival_airport"
+            ),
+            "flight__departure_time__time": self.request.GET.get("departure_time"),
+            "flight__arrival_time__time": self.request.GET.get("arrival_time"),
+        }
+
+        filter_conditions = Q()
+        for filter_key, filter_value in filters.items():
+            if filter_value:
+                filter_conditions &= Q(**{filter_key: filter_value})
+
+        queryset = queryset.filter(filter_conditions)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["is_admin_user"] = self.request.user.role == "admin"
+        context["filter_form"] = BookingFilterForm(self.request.GET or None)
         return context
 
 

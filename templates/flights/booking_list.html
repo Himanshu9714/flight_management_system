@@ -6,9 +6,32 @@
 <div class="container">
     <h2>Bookings</h2>
 
-    <form method="get" class="form-inline mb-4">
-        <input type="text" name="search" class="form-control mr-2" placeholder="Search bookings" value="{{ request.GET.search }}">
-        <button type="submit" class="btn btn-primary">Search</button>
+    <form method="get" class="form-row align-items-center mb-4">
+        <div class="form-group col-md-3">
+            {{ filter_form.start_date.label_tag }} {{ filter_form.start_date }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.end_date.label_tag }} {{ filter_form.end_date }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.flight_number.label_tag }} {{ filter_form.flight_number }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.departure_airport.label_tag }} {{ filter_form.departure_airport }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.arrival_airport.label_tag }} {{ filter_form.arrival_airport }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.departure_time.label_tag }} {{ filter_form.departure_time }}
+        </div>
+        <div class="form-group col-md-3">
+            {{ filter_form.arrival_time.label_tag }} {{ filter_form.arrival_time }}
+        </div>
+        <div class="form-group col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+            <a href="{% url 'bookings:booking_list' %}" class="btn btn-secondary">Reset</a>
+        </div>
     </form>
 
     <table class="table table-striped">
@@ -17,6 +40,10 @@
                 <th>ID</th>
                 <th>Flight</th>
                 <th>Seat Number</th>
+                <th>Departure Airport</th>
+                <th>Arrival Airport</th>
+                <th>Departure Time</th>
+                <th>Arrival Time</th>
                 <th>Price</th>
                 {% if is_admin_user %}
                 <th>User</th>
@@ -31,6 +58,10 @@
                 <td>{{ booking.id }}</td>
                 <td>{{ booking.flight }}</td>
                 <td>{{ booking.seat_number }}</td>
+                <td>{{ booking.flight.departure_airport }}</td>
+                <td>{{ booking.flight.arrival_airport }}</td>
+                <td>{{ booking.flight.departure_time }}</td>
+                <td>{{ booking.flight.arrival_time }}</td>
                 <td>${{ booking.price }}</td>
                 {% if is_admin_user %}
                 <td>{{ booking.user.email }}</td>
@@ -45,7 +76,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="{% if is_admin_user %}7{% else %}6{% endif %}" class="text-center">No bookings available.</td>
+                <td colspan="{% if is_admin_user %}11{% else %}10{% endif %}" class="text-center">No bookings available.</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -55,8 +86,8 @@
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
-                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page=1">&laquo; first</a>
-                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page=1">&laquo; first</a>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
 
             <span class="current">
@@ -64,8 +95,8 @@
             </span>
 
             {% if page_obj.has_next %}
-                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
-                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
+                <a href="?{% if request.GET %}{{ request.GET.urlencode }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
             {% endif %}
         </span>
     </div>
