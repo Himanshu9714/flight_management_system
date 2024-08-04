@@ -98,3 +98,6 @@ If you need to run Django management commands, you can do so within the running 
     ```sh
     docker-compose exec web python manage.py createsuperuser
     ```
+
+### ER Diagram
+![ER](https://github.com/user-attachments/assets/c08361e3-80e3-4874-b902-08d4846b7ff7)
