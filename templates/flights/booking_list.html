@@ -4,63 +4,70 @@
 
 {% block content %}
 <div class="container">
-    <h1>Your Bookings</h1>
-    <a href="{% url 'bookings:booking_create' %}" class="btn btn-primary mb-3">Book a Flight</a>
+    <h2>Bookings</h2>
 
-    {% if bookings %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Flight</th>
-                    <th>Seat Number</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for booking in bookings %}
-                <tr>
-                    <td>{{ booking.id }}</td>
-                    <td>{{ booking.flight }}</td>
-                    <td>{{ booking.seat_number }}</td>
-                    <td>${{ booking.price }}</td>
-                    <td>{{ booking.get_status_display }}</td>
-                    <td>
-                        <a href="{% url 'bookings:booking_detail' booking.id %}" class="btn btn-info btn-sm">View</a>
-                        {% if booking.status == 'confirmed' %}
-                            <a href="{% url 'bookings:booking_cancel' booking.id %}" class="btn btn-danger btn-sm">Cancel</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="6">No bookings available.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <form method="get" class="form-inline mb-4">
+        <input type="text" name="search" class="form-control mr-2" placeholder="Search bookings" value="{{ request.GET.search }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
 
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Flight</th>
+                <th>Seat Number</th>
+                <th>Price</th>
+                {% if is_admin_user %}
+                <th>User</th>
                 {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">next</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.id }}</td>
+                <td>{{ booking.flight }}</td>
+                <td>{{ booking.seat_number }}</td>
+                <td>${{ booking.price }}</td>
+                {% if is_admin_user %}
+                <td>{{ booking.user.email }}</td>
                 {% endif %}
+                <td>{{ booking.get_status_display }}</td>
+                <td>
+                    <a href="{% url 'bookings:booking_detail' booking.id %}" class="btn btn-info btn-sm">View</a>
+                    {% if booking.status == 'confirmed' %}
+                        <a href="{% url 'bookings:booking_cancel' booking.id %}" class="btn btn-danger btn-sm">Cancel</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if is_admin_user %}7{% else %}6{% endif %}" class="text-center">No bookings available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'bookings:booking_create' %}" class="btn btn-success mb-3">Book a Flight</a>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page=1">&laquo; first</a>
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
-        </div>
-    {% else %}
-        <p>No bookings found.</p>
-    {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.next_page_number }}">next</a>
+                <a href="?{% if request.GET.search %}search={{ request.GET.search }}&{% endif %}page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </div>
 {% endblock %}

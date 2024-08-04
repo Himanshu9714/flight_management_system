@@ -21,14 +21,26 @@ class BookingListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Booking.objects.filter(user=self.request.user).order_by("-booking_date")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_admin_user"] = self.request.user.role == "admin"
+        return context
+
 
 class BookingCreateView(LoginRequiredMixin, CreateView):
     model = Booking
     form_class = BookingForm
     template_name = "flights/booking_form.html"
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if not self.request.user.role == "admin":
+            form.fields.pop("user")
+        return form
+
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        if not self.request.user.role == "admin":
+            form.instance.user = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -42,7 +54,7 @@ class BookingDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
-        if obj.user != self.request.user:
+        if not self.request.user.role == "admin" and obj.user != self.request.user:
             raise PermissionDenied
         return obj
 
@@ -50,7 +62,7 @@ class BookingDetailView(LoginRequiredMixin, DetailView):
 class BookingCancelView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         booking = get_object_or_404(Booking, pk=kwargs["pk"])
-        if booking.user == request.user:
+        if request.user.role == "admin" or booking.user == request.user:
             booking.status = "canceled"
             booking.save()
         return redirect(reverse_lazy("bookings:booking_list"))

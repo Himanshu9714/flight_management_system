@@ -20,10 +20,10 @@
                 <h3>Login</h3>
             </div>
             <div class="card-body">
-                {% if messages %}
+                {% if form.non_field_errors %}
                     <div class="alert alert-danger" role="alert">
-                        {% for message in messages %}
-                            <p>{{ message }}</p>
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -32,10 +32,24 @@
                     <div class="form-group">
                         <label for="email">Email address</label>
                         <input type="email" class="form-control" id="email" name="username" required autofocus>
+                        {% if form.username.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
+                        {% if form.password.errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.password.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Login</button>
                 </form>

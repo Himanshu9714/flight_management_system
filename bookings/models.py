@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -27,6 +28,21 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Booking {self.id} - {self.flight.flight_number} by {self.user.email}"
+
+    def clean(self):
+        super().clean()
+        if self.status == "confirmed":
+            # Check if the seat is already booked
+            if Booking.objects.filter(
+                flight=self.flight, seat_number=self.seat_number, status="confirmed"
+            ).exists():
+                raise ValidationError(_("This seat is already booked."))
+
+            # Check if the seat number exceeds available seats
+            if int(self.seat_number) > self.flight.seats_available:
+                raise ValidationError(
+                    _("The seat number exceeds the available seats of the flight.")
+                )
 
 
 class Seat(models.Model):

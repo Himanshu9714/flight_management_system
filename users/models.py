@@ -47,6 +47,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    @property
+    def role(self):
+        return self.user_roles.first().role
+
     def __str__(self):
         return self.email
 
@@ -80,13 +84,15 @@ class UserRole(models.Model):
         (USER, "User"),
     ]
 
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="user_roles"
+    )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=USER)
 
     class Meta:
         db_table = "user_roles"
-        verbose_name = _("role")
-        verbose_name_plural = _("roles")
+        verbose_name = _("user role")
+        verbose_name_plural = _("user roles")
         unique_together = ("user", "role")
 
     def __str__(self):

@@ -45,11 +45,3 @@ class AirlineDeleteView(DeleteView):
     model = Airline
     template_name = "flights/airline_confirm_delete.html"
     success_url = reverse_lazy("airlines:airline_list")
-
-    def get(self, request, *args, **kwargs):
-        # Handle GET request separately to ensure user confirmation
-        return self.render_to_response(self.get_context_data())
-
-    def post(self, request, *args, **kwargs):
-        # Handle POST request for deletion
-        return super().post(request, *args, **kwargs)

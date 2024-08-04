@@ -50,20 +50,28 @@
         }
 
         .profile {
-            width: fit-content;
-            position: absolute;
+            position: relative;
             right: 40px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: end;
+            height: 60px;
         }
 
-        .profile img {
+        .profile_inner img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 1px solid black;
         }
+
+        .profile_inner {
+            display: flex;
+            width: fit-content;
+            align-items: center;
+            flex-direction: column;
+        }
+
     </style>
 </head>
 <body>
@@ -78,8 +86,8 @@
             <a href="{% url 'flights:flight_list' %}">Flights</a>
             <a href="{% url 'airlines:airline_list' %}">Airlines</a>
             <a href="{% url 'airports:airport_list' %}">Airports</a>
-            {% if request.user.is_staff %}
-                <a href="#">Users</a>
+            {% if request.user.role == "admin" %}
+                <a href="{% url 'users:user_list' %}">Users</a>
             {% endif %}
             <a href="{% url 'bookings:booking_list' %}">Bookings</a>
             <div class="bottom-links">
@@ -93,11 +101,18 @@
         </nav>
         <div class="content">
             <div class="profile">
-                <img src="{{ request.user.profile.profile_picture.url }}" alt="img">
-                <p>
-                    <a href="{% url 'users:profile_edit' %}">{{ request.user.full_name }}</a>
-                </p>
+                <div class="profile_inner">
+                    {% if request.user.profile.profile_picture %}
+                        <img src="{{ request.user.profile.profile_picture.url }}" alt="Profile Picture">
+                    {% else %}
+                        <img src="{% static 'images/img.png' %}" alt="Default Image">
+                    {% endif %}
+                    <p>
+                        <a href="{% url 'users:profile_edit' %}">{{ request.user.full_name }}</a>
+                    </p>
+                </div>
             </div>
+            <hr/>
             {% block content %}
             {% endblock %}
         </div>
