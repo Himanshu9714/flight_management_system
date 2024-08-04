@@ -32,5 +32,7 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# TODO: the static endpoint handling should be removed from here in production environment
+# and needs to use nginx or apache configurations for the same.
+# if settings.DEBUG:
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

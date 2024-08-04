@@ -12,8 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv(
     "SECRET_KEY", "django-insecure-@@o^mn(d*@(9mwf($$7+k&!^s7gd)c^4hl1omtlv+z4zzja&+o"
 )
-DEBUG = os.getenv("DEBUG", False)
+DEBUG = int(os.getenv("DEBUG", False))
 ALLOWED_HOSTS = ["*"]
+
+# ENVIRONMENT
+ENVIRONMENT = os.getenv("ENVIRONMENT", "local")
 
 # Applications
 INSTALLED_APPS = [
@@ -65,7 +68,7 @@ TEMPLATES = [
 # WSGI
 WSGI_APPLICATION = "flight_booking_system.wsgi.application"
 
-if DEBUG:
+if ENVIRONMENT == "local":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -123,7 +126,7 @@ REST_FRAMEWORK = {
 }
 
 # Logging
-if not DEBUG:
+if ENVIRONMENT != "local":
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
